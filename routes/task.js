@@ -49,12 +49,20 @@ router.post("/create-task", async (req, res) => {
 //view one
 router.get("/:id", async (req, res) => {
   try {
-    const task = await Task.findById(req.query.id);
-    console.log(task);
-    if (!task) {
-      res.status(404).json({ message: "Task not found" });
+    const taskId = req.params.id;
+    
+    if (!taskId) {
+      return res.status(400).json({ message: "Task ID not provided" });
     }
-    res.send(task);
+
+    const task = await Task.findById(taskId);
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.json(task);
+   
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "something went wrong" });
